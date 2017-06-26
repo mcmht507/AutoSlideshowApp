@@ -32,13 +32,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         // 画像取得の許可
         if (Build.VERSION.SDK_INT >= M) {
-            // 許可されていなにのでダイアログを表示する
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_CODE);
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            } else {
+                // 許可されていなにのでダイアログを表示する
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_CODE);
+            }
         }
+
         // 次へボタン作成
-        final Button nextBtn = (Button) findViewById(R.id.nextBtn);
+        Button nextBtn = (Button) findViewById(R.id.nextBtn);
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if(Build.VERSION.SDK_INT >= M  && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            nextBtn.setEnabled(false);
+            backBtn.setEnabled(false);
+            toggleBtn.setEnabled(false);
+        }
     }
 
     @Override
