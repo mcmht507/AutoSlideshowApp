@@ -33,16 +33,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // 画像取得の許可
         if (Build.VERSION.SDK_INT >= M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                btnEnableSetting();
             } else {
                 // 許可されていなにのでダイアログを表示する
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_CODE);
             }
         }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 許可された場合
+                btnEnableSetting();
+            } else {
+                // 許可されなかった場合
+                btnDisableSetting();
+            }
+        }
+    }
+
+    private void btnEnableSetting() {
         // 次へボタン作成
         Button nextBtn = (Button) findViewById(R.id.nextBtn);
         nextBtn.setOnClickListener(new View.OnClickListener() {
@@ -78,27 +93,24 @@ public class MainActivity extends AppCompatActivity {
                             });
                         }
                     }, 2000, 2000);
-                } else if(timer != null){
+                } else if (timer != null) {
                     timer.cancel();
                     timer = null;
                 }
             }
         });
-
-        if(Build.VERSION.SDK_INT >= M  && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            nextBtn.setEnabled(false);
-            backBtn.setEnabled(false);
-            toggleBtn.setEnabled(false);
-        }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            }
-        }
+    private void btnDisableSetting() {
+        // 次へボタン作成
+        Button nextBtn = (Button) findViewById(R.id.nextBtn);
+        nextBtn.setEnabled(false);
+        // 戻るボタン作成
+        Button backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn.setEnabled(false);
+        // 再生／停止ボタン作成
+        Button toggleBtn = (Button) findViewById(R.id.toggleBtn);
+        toggleBtn.setEnabled(false);
     }
 
     private int nextImage(int imageIndex) {
