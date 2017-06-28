@@ -24,9 +24,15 @@ import static android.os.Build.VERSION_CODES.M;
 public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
+    private static final String CONST_PLAY = "再生";
+    private static final String CONST_STOP = "停止";
     private int imageIndex = 0;
     Timer timer;
     Handler handler = new Handler();
+    Button nextBtn;
+    Button backBtn;
+    Button toggleBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void btnEnableSetting() {
         // 次へボタン作成
-        Button nextBtn = (Button) findViewById(R.id.nextBtn);
+        nextBtn = (Button) findViewById(R.id.nextBtn);
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // 戻るボタン作成
-        Button backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn = (Button) findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,11 +81,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // 再生／停止ボタン作成
-        Button toggleBtn = (Button) findViewById(R.id.toggleBtn);
+        toggleBtn = (Button) findViewById(R.id.toggleBtn);
         toggleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 文字の表示切り替え
+                String btnText = toggleBtn.getText().toString();
+                if(CONST_PLAY.equals(btnText)){
+                    toggleBtn.setText(CONST_STOP);
+                } else {
+                    toggleBtn.setText(CONST_PLAY);
+                }
+
                 if (timer == null) {
+                    // 進むボタンと戻るボタンを非活性
+                    nextBtn.setEnabled(false);
+                    backBtn.setEnabled(false);
+
                     timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
@@ -94,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }, 2000, 2000);
                 } else if (timer != null) {
+                    nextBtn.setEnabled(true);
+                    backBtn.setEnabled(true);
                     timer.cancel();
                     timer = null;
                 }
@@ -103,13 +123,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void btnDisableSetting() {
         // 次へボタン作成
-        Button nextBtn = (Button) findViewById(R.id.nextBtn);
+        nextBtn = (Button) findViewById(R.id.nextBtn);
         nextBtn.setEnabled(false);
         // 戻るボタン作成
-        Button backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn = (Button) findViewById(R.id.backBtn);
         backBtn.setEnabled(false);
         // 再生／停止ボタン作成
-        Button toggleBtn = (Button) findViewById(R.id.toggleBtn);
+        toggleBtn = (Button) findViewById(R.id.toggleBtn);
         toggleBtn.setEnabled(false);
     }
 
